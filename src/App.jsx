@@ -1,21 +1,35 @@
 import { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Instances, Instance } from '@react-three/drei';
 import { buildCinemaLayout } from './data/seatLayout';
+import { buildSeatGeometry } from './utils/seatGeometry';
+import { createCarpetTexture } from './utils/carpetTexture';
 import './App.css';
 
-function Seat({ position }) {
+function Seat({ seats }) {
+    const geometry = useMemo(() => buildSeatGeometry(), []);
     return (
-        <group position={position}>
-            <mesh position={[0, 0.25, 0]}>
-                <boxGeometry args={[0.5, 0.1, 0.5]} />
-                <meshStandardMaterial color="#7a1620" />
-            </mesh>
-            <mesh position={[0, 0.55, 0.2]} rotation={[-0.15, 0, 0]}>
-                <boxGeometry args={[0.5, 0.6, 0.1]} />
-                <meshStandardMaterial color="#7a1620" />
-            </mesh>
-        </group>
+        <Instances geometry={geometry} limit={seats.length}>
+            <meshStandardMaterial color="#7a1620" roughness={0.65} />
+            {seats.map((seat) => (
+                <Instance key={seat.id} position={[seat.x, seat.y, seat.z]} />
+            ))}
+        </Instances>
+    );
+}
+
+function Floor({ width, depth }) {
+    const texture = useMemo(() => {
+        const tex = createCarpetTexture();
+        tex.repeat.set(width / 2, depth / 2);
+        return tex;
+    }, [width, depth]);
+
+    return (
+        <mesh rotation={[0, -0.02, depth / 2]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[width, depth]} />
+            <meshStandardMaterial map={texture} roughness={0.95} />
+        </mesh>
     );
 }
 
@@ -28,9 +42,8 @@ export default function App() {
                 <color attach="background" args={['#0d0a0f']} />
                 <ambientLight intensity={0.6} />
                 <directionalLight position={[3, 4, 2]} intensity={1.2} />
-                {layout.seats.map((seat) => (
-                    <Seat key={seat.id} position={[seat.x, seat.y, seat.z]} />
-                ))}
+                <Floor width={layout.roomWidth} depth={layout.roomDepth} />
+                <Seat seats={layout.seats} />
                 <OrbitControls target={[0, 1, 10]} />
             </Canvas>
         </div>
