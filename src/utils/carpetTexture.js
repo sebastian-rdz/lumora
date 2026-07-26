@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 
-// Genera de forma procedural una textura tipo "alfombra de cine"
-// (patrón de rombos oscuros) sin depender de ningún archivo externo.
+// create carpet texture
 export function createCarpetTexture() {
     const size = 256;
     const canvas = document.createElement('canvas');

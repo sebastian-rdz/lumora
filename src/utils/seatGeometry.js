@@ -1,9 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-// Construye la geometría de una sola butaca (cojín + respaldo + brazos)
-// fusionada en un solo BufferGeometry, para poder dibujar cientos de
-// butacas con una sola geometría instanciada (rendimiento).
+// create seat (cushion + backrest + armrests)
 export function buildSeatGeometry() {
     const parts = [];
 
@@ -20,8 +18,6 @@ export function buildSeatGeometry() {
     const seatD = 0.46;
     const seatH = 0.09;
 
-    // La persona se sienta mirando hacia -z (la pantalla), así que el
-    // respaldo y la cabecera van del lado +z (detrás de quien se sienta).
     bake(new THREE.BoxGeometry(0.1, 0.42, 0.28), 0, 0.21, 0.05);
     bake(new THREE.BoxGeometry(seatW, seatH, seatD), 0, 0.46, 0);
     bake(new THREE.BoxGeometry(seatW, 0.62, 0.1), 0, 0.8, 0.19, 0.12, 0, 0);
