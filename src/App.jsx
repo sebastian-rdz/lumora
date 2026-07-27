@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Instances, Instance } from '@react-three/drei';
 import { buildCinemaLayout } from './data/seatLayout';
@@ -6,19 +6,8 @@ import { buildSeatGeometry } from './utils/seatGeometry';
 import { createCarpetTexture } from './utils/carpetTexture';
 import CinemaScreen from './components/CinemaScreen';
 import CinemaRoom from './components/CinemaRoom';
+import Seats from './components/Seats';
 import './App.css';
-
-function Seat({ seats }) {
-    const geometry = useMemo(() => buildSeatGeometry(), []);
-    return (
-        <Instances geometry={geometry} limit={seats.length}>
-            <meshStandardMaterial color="#7a1620" roughness={0.65} />
-            {seats.map((seat) => (
-                <Instance key={seat.id} position={[seat.x, seat.y, seat.z]} />
-            ))}
-        </Instances>
-    );
-}
 
 function Floor({ width, depth }) {
     const texture = useMemo(() => {
@@ -36,6 +25,7 @@ function Floor({ width, depth }) {
 }
 
 export default function App() {
+    const [selectedSeatId, setSelectedSeatId] = useState(null);
     const layout = useMemo(() => buildCinemaLayout(), []);
 
     return (
@@ -46,7 +36,7 @@ export default function App() {
                 <directionalLight position={[3, 4, 2]} intensity={0.45} />
                 {/* <Floor width={layout.roomWidth} depth={layout.roomDepth} /> */}
                 <CinemaRoom layout={layout} />
-                <Seat seats={layout.seats} />
+                <Seats seats={layout.seats} selectedSeatId={selectedSeatId} onSelect={setSelectedSeatId} />
                 <OrbitControls target={[0, 1, 10]} />
                 <CinemaScreen
                     width={layout.config.screenWidth}
