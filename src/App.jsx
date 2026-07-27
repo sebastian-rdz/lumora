@@ -5,6 +5,7 @@ import { buildCinemaLayout } from './data/seatLayout';
 import { buildSeatGeometry } from './utils/seatGeometry';
 import { createCarpetTexture } from './utils/carpetTexture';
 import CinemaScreen from './components/CinemaScreen';
+import CinemaRoom from './components/CinemaRoom';
 import './App.css';
 
 function Seat({ seats }) {
@@ -41,9 +42,10 @@ export default function App() {
         <div className="app">
             <Canvas camera={{ position: [4, 5, 15], fov: 55 }}>
                 <color attach="background" args={['#0d0a0f']} />
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[3, 4, 2]} intensity={1.2} />
-                <Floor width={layout.roomWidth} depth={layout.roomDepth} />
+                <ambientLight intensity={0.45} />
+                <directionalLight position={[3, 4, 2]} intensity={0.45} />
+                {/* <Floor width={layout.roomWidth} depth={layout.roomDepth} /> */}
+                <CinemaRoom layout={layout} />
                 <Seat seats={layout.seats} />
                 <OrbitControls target={[0, 1, 10]} />
                 <CinemaScreen
