@@ -3,6 +3,7 @@ import CinemaScreen from './CinemaScreen.jsx';
 import Seats from './Seats.jsx';
 import PovController from './PovController.jsx';
 import screenVideoUrl from '../assets/screens/screen.mp4';
+import ResponsiveFov from './ResponsiveFov.jsx';
 
 export default function Experience({ layout, mode, selectedSeatId, selectedSeat, onSelectSeat, lightsOn }) {
     const { config } = layout;
@@ -29,6 +30,7 @@ export default function Experience({ layout, mode, selectedSeatId, selectedSeat,
             <Seats seats={layout.seats} selectedSeatId={selectedSeatId} onSelect={onSelectSeat} />
 
             <PovController mode={mode} seat={selectedSeat} layout={layout} />
+            <ResponsiveFov />
         </>
     );
 }

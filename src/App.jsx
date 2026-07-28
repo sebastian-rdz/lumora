@@ -6,6 +6,7 @@ import ControlsPanel from './components/ControlsPanel.jsx';
 import ScreenVideoPanel from './components/ScreenVideoPanel.jsx';
 import { buildCinemaLayout } from './data/seatLayout.js';
 import { getOverviewPose } from './utils/cameraPose.js';
+import { useFullscreen } from './hooks/useFullscreen.js';
 import './App.css';
 
 function pickDefaultSeat(layout) {
@@ -25,6 +26,8 @@ export default function App() {
     const [lightsOn, setLightsOn] = useState(true);
     const [screenVideoUrl, setScreenVideoUrl] = useState(null);
     const [screenPanelOpen, setScreenPanelOpen] = useState(false);
+
+    const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
 
     const selectedSeat = layout.seats.find((s) => s.id === selectedSeatId) ?? null;
 
@@ -69,6 +72,8 @@ export default function App() {
                 onBackToOverview={handleBackToOverview}
                 selectedSeatId={selectedSeatId}
                 onToggleScreenPanel={() => setScreenPanelOpen((v) => !v)}
+                isFullscreen={isFullscreen}
+                onToggleFullscreen={toggleFullscreen}
             />
 
             <ScreenVideoPanel
