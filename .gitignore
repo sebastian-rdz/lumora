@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Video clips dropped by users into the screen picker (large binaries /
+# potentially copyrighted content — never meant for version control)
+src/assets/screens/*
+!src/assets/screens/.gitkeep

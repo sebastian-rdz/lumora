@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -59,10 +59,84 @@ function useScreenCanvas() {
     return texture;
 }
 
-export default function CinemaScreen({ width, height, bottom }) {
+function AnimatedSurface({ width, height, y, z }) {
     const texture = useScreenCanvas();
+    return (
+        <mesh position={[0, y, z]}>
+            <planeGeometry args={[width, height]} />
+            <meshBasicMaterial map={texture} toneMapped={false} />
+        </mesh>
+    );
+}
+
+function useVideoTexture(url) {
+    const [video] = useState(() => {
+        const v = document.createElement('video');
+        v.loop = true;
+        v.muted = true;
+        v.defaultMuted = true;
+        v.playsInline = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        return v;
+    });
+
+    const texture = useMemo(() => {
+        const t = new THREE.VideoTexture(video);
+        t.colorSpace = THREE.SRGBColorSpace;
+        return t;
+    }, [video]);
+
+    useEffect(() => {
+        video.src = url;
+        const tryPlay = () => video.play().catch(() => {});
+        tryPlay();
+        video.addEventListener('canplay', tryPlay);
+        document.addEventListener('visibilitychange', tryPlay);
+        return () => {
+            video.removeEventListener('canplay', tryPlay);
+            document.removeEventListener('visibilitychange', tryPlay);
+            video.pause();
+        };
+    }, [video, texture, url]);
+
+    return texture;
+}
+
+function VideoSurface({ url, width, height, y, z }) {
+    const texture = useVideoTexture(url);
+    const [dims, setDims] = useState({ w: width, h: height });
+
+    useEffect(() => {
+        const video = texture.image;
+        const applyContain = () => {
+            const screenAspect = width / height;
+            const videoAspect = video.videoWidth / video.videoHeight;
+            if (!videoAspect) return;
+            if (videoAspect > screenAspect) {
+                setDims({ w: width, h: width / videoAspect });
+            } else {
+                setDims({ w: height * videoAspect, h: height });
+            }
+        };
+        if (video.readyState >= 1) applyContain();
+        else video.addEventListener('loadedmetadata', applyContain, { once: true });
+        return () => video.removeEventListener('loadedmetadata', applyContain);
+    }, [texture, width, height]);
+
+    return (
+        <mesh position={[0, y, z]}>
+            <planeGeometry args={[dims.w, dims.h]} />
+            <meshBasicMaterial map={texture} toneMapped={false} />
+        </mesh>
+    );
+}
+
+export default function CinemaScreen({ width, height, bottom, videoUrl }) {
     const lightRef = useRef();
     const centerZ = -0.55;
+    const screenY = height / 2 + bottom;
+    const screenZ = centerZ + 0.09;
 
     useFrame(({ clock }) => {
         if (!lightRef.current) return;
@@ -72,29 +146,32 @@ export default function CinemaScreen({ width, height, bottom }) {
 
     return (
         <group>
-            <mesh position={[0, height / 2 + bottom, centerZ - 0.15]}>
+            <mesh position={[0, screenY, centerZ - 0.15]}>
                 <boxGeometry args={[width + 1.6, height + 1.4, 0.3]} />
                 <meshStandardMaterial color="#050505" roughness={0.95} />
             </mesh>
-            <mesh position={[-width / 2 - 1.05, height / 2 + bottom - 0.3, centerZ - 0.05]}>
+            <mesh position={[-width / 2 - 1.05, screenY - 0.3, centerZ - 0.05]}>
                 <boxGeometry args={[1.5, height + 1.2, 0.35]} />
                 <meshStandardMaterial color="#3b0d14" roughness={0.85} />
             </mesh>
-            <mesh position={[width / 2 + 1.05, height / 2 + bottom - 0.3, centerZ - 0.05]}>
+            <mesh position={[width / 2 + 1.05, screenY - 0.3, centerZ - 0.05]}>
                 <boxGeometry args={[1.5, height + 1.2, 0.35]} />
                 <meshStandardMaterial color="#3b0d14" roughness={0.85} />
             </mesh>
-            <mesh position={[0, height / 2 + bottom, centerZ + 0.02]}>
+            <mesh position={[0, screenY, centerZ + 0.02]}>
                 <boxGeometry args={[width + 0.5, height + 0.5, 0.12]} />
                 <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.1} />
             </mesh>
-            <mesh position={[0, height / 2 + bottom, centerZ + 0.09]}>
-                <planeGeometry args={[width, height]} />
-                <meshBasicMaterial map={texture} toneMapped={false} />
-            </mesh>
+
+            {videoUrl ? (
+                <VideoSurface key={videoUrl} url={videoUrl} width={width} height={height} y={screenY} z={screenZ} />
+            ) : (
+                <AnimatedSurface width={width} height={height} y={screenY} z={screenZ} />
+            )}
+
             <pointLight
                 ref={lightRef}
-                position={[0, height / 2 + bottom, centerZ + 1.2]}
+                position={[0, screenY, centerZ + 1.2]}
                 color="#9fc1ff"
                 intensity={3.2}
                 distance={26}

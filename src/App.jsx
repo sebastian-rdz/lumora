@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import Experience from './components/Experience.jsx';
 import SeatMapPanel from './components/SeatMapPanel.jsx';
 import ControlsPanel from './components/ControlsPanel.jsx';
+import ScreenVideoPanel from './components/ScreenVideoPanel.jsx';
 import { buildCinemaLayout } from './data/seatLayout.js';
 import { getOverviewPose } from './utils/cameraPose.js';
 import './App.css';
@@ -22,6 +23,8 @@ export default function App() {
     const [mode, setMode] = useState('overview');
     const [panelCollapsed, setPanelCollapsed] = useState(false);
     const [lightsOn, setLightsOn] = useState(true);
+    const [screenVideoUrl, setScreenVideoUrl] = useState(null);
+    const [screenPanelOpen, setScreenPanelOpen] = useState(false);
 
     const selectedSeat = layout.seats.find((s) => s.id === selectedSeatId) ?? null;
 
@@ -55,6 +58,7 @@ export default function App() {
                     selectedSeat={selectedSeat}
                     onSelectSeat={setSelectedSeatId}
                     lightsOn={lightsOn}
+                    screenVideoUrl={screenVideoUrl}
                 />
             </Canvas>
 
@@ -64,6 +68,17 @@ export default function App() {
                 onToggleLights={() => setLightsOn((v) => !v)}
                 onBackToOverview={handleBackToOverview}
                 selectedSeatId={selectedSeatId}
+                onToggleScreenPanel={() => setScreenPanelOpen((v) => !v)}
+            />
+
+            <ScreenVideoPanel
+                open={screenPanelOpen}
+                selectedUrl={screenVideoUrl}
+                onSelect={(url) => {
+                    setScreenVideoUrl(url);
+                    setScreenPanelOpen(false);
+                }}
+                onClose={() => setScreenPanelOpen(false)}
             />
 
             <SeatMapPanel

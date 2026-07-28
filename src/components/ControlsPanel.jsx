@@ -1,4 +1,11 @@
-export default function ControlsPanel({ mode, lightsOn, onToggleLights, onBackToOverview, selectedSeatId }) {
+export default function ControlsPanel({
+    mode,
+    lightsOn,
+    onToggleLights,
+    onBackToOverview,
+    selectedSeatId,
+    onToggleScreenPanel,
+}) {
     return (
         <div className="hud">
             <div className="hud__brand">Lumora · Sala estándar</div>
@@ -17,6 +24,9 @@ export default function ControlsPanel({ mode, lightsOn, onToggleLights, onBackTo
             </div>
 
             <div className="hud__group">
+                <button className="btn-ghost" onClick={onToggleScreenPanel}>
+                    Video de pantalla
+                </button>
                 <button className="btn-ghost" onClick={onToggleLights}>
                     {lightsOn ? 'Apagar luces' : 'Encender luces'}
                 </button>
