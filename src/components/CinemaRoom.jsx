@@ -72,7 +72,7 @@ function ExitSign({ position, rotationY = 0 }) {
     );
 }
 
-function CeilingLights({ roomWidth, roomDepth, ceilingHeight, frontZ }) {
+function CeilingLights({ roomWidth, roomDepth, ceilingHeight, frontZ, lightsOn }) {
     const count = 5;
     const positions = useMemo(() => {
         const arr = [];
@@ -86,23 +86,35 @@ function CeilingLights({ roomWidth, roomDepth, ceilingHeight, frontZ }) {
     return (
         <group>
             {positions.map((z) => (
-                <mesh key={z} position={[0, ceilingHeight - 0.08, z]}>
-                    <boxGeometry args={[roomWidth * 0.55, 0.06, 0.35]} />
-                    <meshStandardMaterial
-                        color="#4a4a55"
-                        emissive="#6d6d85"
-                        emissiveIntensity={0.4}
-                        toneMapped={false}
-                    />
-                </mesh>
+                <group key={z}>
+                    <mesh position={[0, ceilingHeight - 0.08, z]}>
+                        <boxGeometry args={[roomWidth * 0.55, 0.06, 0.35]} />
+                        <meshStandardMaterial
+                            color="#4a4a55"
+                            emissive="#f4ead2"
+                            emissiveIntensity={lightsOn ? 2.2 : 0.35}
+                            toneMapped={false}
+                        />
+                    </mesh>
+                    {lightsOn && (
+                        <pointLight
+                            position={[0, ceilingHeight - 0.6, z]}
+                            color="#fff1d6"
+                            intensity={9}
+                            distance={roomWidth * 1.1}
+                            decay={2}
+                        />
+                    )}
+                </group>
             ))}
         </group>
     );
 }
 
-export default function CinemaRoom({ layout }) {
+export default function CinemaRoom({ layout, lightsOn }) {
     const { rowsMeta, roomWidth, roomDepth, rowWidth, ceilingHeight, frontZ } = layout;
     const wallColor = '#1c1418';
+    const wallEmissive = lightsOn ? 0.9 : 0.2;
 
     return (
         <group>
@@ -111,11 +123,21 @@ export default function CinemaRoom({ layout }) {
 
             <mesh position={[-roomWidth / 2, ceilingHeight / 2, roomDepth / 2]}>
                 <boxGeometry args={[0.3, ceilingHeight, roomDepth]} />
-                <meshStandardMaterial color={wallColor} emissive="#2a1c22" emissiveIntensity={0.2} roughness={0.85} />
+                <meshStandardMaterial
+                    color={wallColor}
+                    emissive="#2a1c22"
+                    emissiveIntensity={wallEmissive}
+                    roughness={0.85}
+                />
             </mesh>
             <mesh position={[roomWidth / 2, ceilingHeight / 2, roomDepth / 2]}>
                 <boxGeometry args={[0.3, ceilingHeight, roomDepth]} />
-                <meshStandardMaterial color={wallColor} emissive="#2a1c22" emissiveIntensity={0.2} roughness={0.85} />
+                <meshStandardMaterial
+                    color={wallColor}
+                    emissive="#2a1c22"
+                    emissiveIntensity={wallEmissive}
+                    roughness={0.85}
+                />
             </mesh>
             <mesh position={[0, ceilingHeight / 2, roomDepth]}>
                 <boxGeometry args={[roomWidth, ceilingHeight, 0.3]} />
@@ -131,7 +153,13 @@ export default function CinemaRoom({ layout }) {
                 <boxGeometry args={[roomWidth, 0.2, roomDepth]} />
                 <meshStandardMaterial color="#100c0e" roughness={1} />
             </mesh>
-            <CeilingLights roomWidth={roomWidth} roomDepth={roomDepth} ceilingHeight={ceilingHeight} frontZ={frontZ} />
+            <CeilingLights
+                roomWidth={roomWidth}
+                roomDepth={roomDepth}
+                ceilingHeight={ceilingHeight}
+                frontZ={frontZ}
+                lightsOn={lightsOn}
+            />
 
             <ExitSign position={[-roomWidth / 2 + 0.4, 2.4, frontZ + 0.6]} rotationY={Math.PI / 2} />
             <ExitSign position={[roomWidth / 2 - 0.4, 2.4, frontZ + 0.6]} rotationY={-Math.PI / 2} />

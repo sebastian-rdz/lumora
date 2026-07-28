@@ -21,17 +21,20 @@ export default function App() {
     const [selectedSeatId, setSelectedSeatId] = useState(defaultSeat.id);
     const [mode, setMode] = useState('overview');
     const [panelCollapsed, setPanelCollapsed] = useState(false);
+    const [lightsOn, setLightsOn] = useState(true);
 
     const selectedSeat = layout.seats.find((s) => s.id === selectedSeatId) ?? null;
 
     const handleConfirm = () => {
         if (!selectedSeatId) return;
         setMode('pov');
+        setLightsOn(false);
         setPanelCollapsed(true);
     };
 
     const handleBackToOverview = () => {
         setMode('overview');
+        setLightsOn(true);
         setPanelCollapsed(false);
     };
 
@@ -51,10 +54,17 @@ export default function App() {
                     selectedSeatId={selectedSeatId}
                     selectedSeat={selectedSeat}
                     onSelectSeat={setSelectedSeatId}
+                    lightsOn={lightsOn}
                 />
             </Canvas>
 
-            <ControlsPanel mode={mode} onBackToOverview={handleBackToOverview} selectedSeatId={selectedSeatId} />
+            <ControlsPanel
+                mode={mode}
+                lightsOn={lightsOn}
+                onToggleLights={() => setLightsOn((v) => !v)}
+                onBackToOverview={handleBackToOverview}
+                selectedSeatId={selectedSeatId}
+            />
 
             <SeatMapPanel
                 seats={layout.seats}
