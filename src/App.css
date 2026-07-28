@@ -1,11 +1,219 @@
 .app {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .app canvas {
-  display: block;
-  touch-action: none;
+    display: block;
+    touch-action: none;
+}
+
+.hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    background: linear-gradient(to bottom, rgba(5, 4, 8, 0.85), rgba(5, 4, 8, 0));
+    pointer-events: none;
+}
+
+.hud > * {
+    pointer-events: auto;
+}
+
+.hud__brand {
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: #f4b942;
+    font-size: 14px;
+}
+
+.hud__group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e7e1e6;
+    font-size: 13px;
+}
+
+.hud__hint {
+    color: #b9b0bd;
+}
+
+.hud__seat {
+    background: rgba(244, 185, 66, 0.15);
+    border: 1px solid rgba(244, 185, 66, 0.4);
+    color: #f4b942;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f1eef2;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: background 0.15s ease;
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.btn-primary {
+    background: #b3221f;
+    border: 1px solid #d8382f;
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #d8382f;
+}
+
+.btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.seat-panel {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(720px, 92vw);
+    background: rgba(15, 10, 14, 0.88);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px 20px;
+    color: #f1eef2;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.seat-panel--collapsed {
+    padding: 10px 16px;
+    width: auto;
+}
+
+.seat-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.seat-panel__header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #f4b942;
+}
+
+.seat-panel__screen-label {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #8a8390;
+    margin: 10px 0 8px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.seat-panel__rows {
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.seat-row__label {
+    width: 18px;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: #8a8390;
+    text-align: center;
+}
+
+.seat-row__seats {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.seat-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+    line-height: 1;
+    border-radius: 4px 4px 6px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #5c1218;
+    color: #e7c9cc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition:
+        transform 0.1s ease,
+        background 0.15s ease;
+}
+
+.seat-btn:hover {
+    background: #d8593f;
+    transform: scale(1.12);
+}
+
+.seat-btn--selected {
+    background: #f4b942;
+    border-color: #f4b942;
+    color: #241a06;
+    font-weight: 700;
+}
+
+.seat-panel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    color: #cfc7d1;
+}
+
+.drag-hint {
+    position: absolute;
+    bottom: 78px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 10, 14, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cfc7d1;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    pointer-events: none;
 }

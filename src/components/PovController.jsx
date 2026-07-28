@@ -6,8 +6,6 @@ import { getOverviewPose } from '../utils/cameraPose.js';
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
-// Controles de "girar la cabeza" mientras se está sentado: arrastrar con el
-// mouse (o el dedo) rota la cámara en su sitio, sin moverla de la butaca.
 function LookAroundControls({ active }) {
     const { camera, gl } = useThree();
     const dragging = useRef(false);
