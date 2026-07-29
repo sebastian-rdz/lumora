@@ -2,10 +2,17 @@ import CinemaRoom from './CinemaRoom.jsx';
 import CinemaScreen from './CinemaScreen.jsx';
 import Seats from './Seats.jsx';
 import PovController from './PovController.jsx';
-import screenVideoUrl from '../assets/screens/screen.mp4';
 import ResponsiveFov from './ResponsiveFov.jsx';
 
-export default function Experience({ layout, mode, selectedSeatId, selectedSeat, onSelectSeat, lightsOn }) {
+export default function Experience({
+    layout,
+    mode,
+    selectedSeatId,
+    selectedSeat,
+    onSelectSeat,
+    lightsOn,
+    screenVideoUrl,
+}) {
     const { config } = layout;
     const bg = lightsOn ? '#2a2028' : '#020203';
 
