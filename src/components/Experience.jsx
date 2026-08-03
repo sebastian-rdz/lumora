@@ -24,8 +24,8 @@ export default function Experience({
                 args={[bg, layout.roomDepth * (lightsOn ? 1.05 : 0.85), layout.roomDepth * (lightsOn ? 2.6 : 1.5)]}
             />
 
-            <ambientLight intensity={lightsOn ? 1.15 : 0.05} />
-            <hemisphereLight args={['#8a86a0', '#241c28', lightsOn ? 1.0 : 0.06]} />
+            <ambientLight intensity={lightsOn ? 1.15 : 0.14} />
+            <hemisphereLight args={['#8a86a0', '#241c28', lightsOn ? 1.0 : 0.16]} />
 
             <CinemaRoom layout={layout} lightsOn={lightsOn} />
             <CinemaScreen

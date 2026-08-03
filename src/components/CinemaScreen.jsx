@@ -141,7 +141,7 @@ export default function CinemaScreen({ width, height, bottom, videoUrl }) {
     useFrame(({ clock }) => {
         if (!lightRef.current) return;
         const t = clock.getElapsedTime();
-        lightRef.current.intensity = 3.2 + Math.sin(t * 2.3) * 0.6 + Math.sin(t * 7.1) * 0.15;
+        lightRef.current.intensity = 5.5 + Math.sin(t * 2.3) * 0.9 + Math.sin(t * 7.1) * 0.25;
     });
 
     return (
@@ -173,9 +173,9 @@ export default function CinemaScreen({ width, height, bottom, videoUrl }) {
                 ref={lightRef}
                 position={[0, screenY, centerZ + 1.2]}
                 color="#9fc1ff"
-                intensity={3.2}
-                distance={26}
-                decay={2}
+                intensity={5.5}
+                distance={30}
+                decay={1.4}
             />
         </group>
     );
